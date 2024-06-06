@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">    
+    <title>Consulta</title>
+</head>
+<body>
+    <form name="Consultar">
+        <p>Consultando dados através do código:</p><br/><br/> 
+        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+            <option value="formato1">Fornecedor</option>
+            <option value="formato2">Remédio</option>
+            <option value="formato3">Funcionário</option>
+            <option value="formato4">Estoque</option>
+        </select>  
+        <br/><br/>
+        <div id="tableContainer"></div>
+    </form>
+
+    <script type="text/javascript">
+        // Função para alterar o formato da tabela
+        function changeTableFormat() {
+            const format = document.getElementById('tableFormat').value;
+            const container = document.getElementById('tableContainer');
+            
+            let contentHTML = '';
+            switch (format) {
+                case 'formato1':
+                    contentHTML = `
+                        <h2>Tabela Fornecedor</h2>
+                        Código: <br/>
+                        <input type='number' name='idFornecedor'><br/>
+                        CNPJ: <br/>
+                        <input type='text' name='txtCNPJ'><br/>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFornecedor'><br/>
+                        <input type="button" name="btBuscar" value="Consultar" onclick="buscar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato2':
+                    contentHTML = `
+                        <h2>Tabela Medicamento</h2>
+                        Código: <br/>
+                        <input type='number' name='idMedicamento'><br/>
+                        Medicamento: <br/>
+                        <input type='text' name='txtNomeMedicamento'><br/>
+                        CID: <br/>
+                        <input type='text' name='txtCID'><br/>
+                        Validade: <br/>
+                        <input type='text' name='txtValidade'><br/>
+                        <input type="button" name="btBuscar" value="Consultar" onclick="buscar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato3':
+                    contentHTML = `
+                        <h2>Tabela Funcionário</h2>
+                        Código: <br/>
+                        <input type='number' name='idFuncionario'><br/>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFuncionario'><br/>
+                        CPF: <br/>
+                        <input type='text' name='txtCPF'><br/>
+                        Turno: <br/>
+                        <input type='text' name='txtTurno'><br/>
+                        <input type="button" name="btBuscar" value="Consultar" onclick="buscar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato4':
+                    contentHTML = `
+                        <h2>Tabela Estoque</h2>
+                        Código: <br/>
+                        <input type='number' name='idEstoque'><br>
+                        Quantidade: <br/>
+                        <input type='text' name='txtQuantidade'><br/>
+                        <input type="button" name="btBuscar" value="Consultar" onclick="buscar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+            }
+            container.innerHTML = contentHTML;
+        }
+
+        // Função para buscar os dados no BD (xampp-MySQL)
+        function buscar(event) {
+            const format = document.getElementById('tableFormat').value;
+            event.preventDefault();
+            let codigo, URL;
+
+            switch (format) {
+                case 'formato1':
+                    codigo = parseInt(document.Consultar.idFornecedor.value);
+                    URL = 'http://localhost/StayGood/apiFornecedor/Fornecedor/' + codigo;
+                    fetchData(URL, codigo, mostrarFornecedor);
+                    break;
+                case 'formato2':
+                    codigo = parseInt(document.Consultar.idMedicamento.value);
+                    URL = 'http://localhost/StayGood/apiMedicamento/Remedios/' + codigo;
+                    fetchData(URL, codigo, mostrarMedicamento);
+                    break;
+                case 'formato3':
+                    codigo = parseInt(document.Consultar.idFuncionario.value);
+                    URL = 'http://localhost/StayGood/apiFuncionario/Funcionario/' + codigo;
+                    fetchData(URL, codigo, mostrarFuncionario);
+                    break;
+                case 'formato4':
+                    codigo = parseInt(document.Consultar.idEstoque.value);
+                    URL = 'http://localhost/StayGood/apiEstoque/Estoque/' + codigo;
+                    fetchData(URL, codigo, mostrarEstoque);
+                    break;               
+            }
+        }
+
+        function fetchData(URL, codigo, callback) {
+            if (codigo) { // Código não pode ser null, pois através dele buscamos dados
+                fetch(URL, {method: 'GET'})
+                    .then(resp => resp.json())
+                    .then(data => callback(codigo, data))
+                    .catch(erro => console.log(erro));
+            }
+        }
+
+        function mostrarFornecedor(codigo, data) {
+            if (codigo != data.information.idFornecedor) {
+                alert("Sem registro com este código: " + codigo + " !!");
+            } else {
+                alert("Dados buscados com sucesso !!");
+                console.log(data);
+                document.Consultar.txtCNPJ.value = data.information.CNPJ;
+                document.Consultar.txtNomeFornecedor.value = data.information.nomeFornecedor;
+            }         
+        }
+
+        function mostrarMedicamento(codigo, data) {
+            if (codigo != data.information.idMedicamento) {
+                alert("Sem registro com este código: " + codigo + " !!");
+            } else {
+                alert("Dados buscados com sucesso !!");
+                console.log(data);
+                document.Consultar.txtNomeMedicamento.value = data.information.nomeMedicamento;
+                document.Consultar.txtCID.value = data.information.CID;
+                document.Consultar.txtValidade.value = data.information.validade;
+            }         
+        }
+
+        function mostrarFuncionario(codigo, data) {
+            if (codigo != data.information.idFuncionario) {
+                alert("Sem registro com este código: " + codigo + " !!");
+            } else {
+                alert("Dados buscados com sucesso !!");
+                console.log(data);
+                document.Consultar.txtNomeFuncionario.value = data.information.nomeFuncionario;
+                document.Consultar.txtCPF.value = data.information.CPF;
+                document.Consultar.txtTurno.value = data.information.turno;
+            }         
+        }
+
+        function mostrarEstoque(codigo, data) {
+            if (codigo != data.information.idEstoque) {
+                alert("Sem registro com este código: " + codigo + " !!");
+            } else {
+                alert("Dados buscados com sucesso !!");
+                console.log(data);
+                document.Consultar.txtQuantidade.value = data.information.quantidade;
+            }         
+        }
+
+        // Chama a função para exibir o formato padrão quando a página é carregada
+        window.onload = changeTableFormat;
+    </script>
+</body>
+</html>

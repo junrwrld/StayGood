@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">    
+    <title>Cadastro</title>
+</head>
+<body>
+    <form name="Cadastro">
+        <p>Cadastro de dados através do código:</p><br/><br/> 
+        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+            <option value="formato1">Fornecedor</option>
+            <option value="formato2">Remédio</option>
+            <option value="formato3">Funcionário</option>
+            <option value="formato4">Estoque</option>
+        </select>  
+        <br/><br/>
+        <div id="formContainer"></div>
+    </form>
+
+    <script type="text/javascript">
+        // Função para alterar o formato do formulário
+        function changeTableFormat() {
+            const format = document.getElementById('tableFormat').value;
+            const container = document.getElementById('formContainer');
+            
+            let contentHTML = '';
+            switch (format) {
+                case 'formato1':
+                    contentHTML = `
+                        <h2>Cadastro de Fornecedor</h2>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFornecedor'><br/>
+                        CNPJ: <br/>
+                        <input type='text' name='txtCNPJ'><br/>
+                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato2':
+                    contentHTML = `
+                        <h2>Cadastro de Remédio</h2>
+                        Medicamento: <br/>
+                        <input type='text' name='txtNomeMedicamento'><br/>
+                        CID: <br/>
+                        <input type='text' name='txtCID'><br/>
+                        Validade: <br/>
+                        <input type='text' name='txtValidade'><br/>
+                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato3':
+                    contentHTML = `
+                        <h2>Cadastro de Funcionário</h2>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFuncionario'><br/>
+                        CPF: <br/>
+                        <input type='text' name='txtCPF'><br/>
+                        Turno: <br/>
+                        <input type='text' name='txtTurno'><br/>
+                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato4':
+                    contentHTML = `
+                        <h2>Cadastro de Estoque</h2>
+                        Quantidade: <br/>
+                        <input type='number' name='txtQuantidade'><br/>
+                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+            }
+            container.innerHTML = contentHTML;
+        }
+
+        // Função para cadastrar os dados no BD (xampp-MySQL)
+        function cadastrar(event) {
+            const format = document.getElementById('tableFormat').value;
+            event.preventDefault();
+            let data = {};
+
+            switch (format) {
+                case 'formato1':
+                    data = {
+                        CNPJ: document.Cadastro.txtCNPJ.value,
+                        nomeFornecedor: document.Cadastro.txtNomeFornecedor.value
+                    };
+                    break;
+                case 'formato2':
+                    data = {
+                        nomeMedicamento: document.Cadastro.txtNomeMedicamento.value,
+                        CID: document.Cadastro.txtCID.value,
+                        validade: document.Cadastro.txtValidade.value
+                    };
+                    break;
+                case 'formato3':
+                    data = {
+                        nomeFuncionario: document.Cadastro.txtNomeFuncionario.value,
+                        CPF: document.Cadastro.txtCPF.value,
+                        turno: document.Cadastro.txtTurno.value
+                    };
+                    break;
+                case 'formato4':
+                    data = {
+                        quantidade: parseInt(document.Cadastro.txtQuantidade.value)
+                    };
+                    break;
+            }
+
+            // Enviar os dados para o servidor
+            fetch(`http://localhost/StayGood/api${format == 'formato1' ? 'Fornecedor/Fornecedor' : format == 'formato2' ? 'Medicamento/Remedios' : format == 'formato3' ? 'Funcionario/Funcionario' : 'Estoque/Estoque'}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status == "error") {
+                        alert("Erro ao cadastrar!");
+                    } else {
+                        alert("Cadastrado com sucesso!");
+                    }
+            })
+        }
+
+        // Chama a função para exibir o formato padrão quando a página é carregada
+        window.onload = changeTableFormat;
+    </script>
+</body>
+</html>

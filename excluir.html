@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">    
+    <title>Exclusão</title>
+</head>
+<body>
+    <form name="Exclusao">
+        <p>Excluindo dados através do código:</p><br/><br/> 
+        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+            <option value="formato1">Fornecedor</option>
+            <option value="formato2">Remédio</option>
+            <option value="formato3">Funcionário</option>
+            <option value="formato4">Estoque</option>
+        </select>  
+        <br/><br/>
+        <div id="formContainer"></div>
+    </form>
+
+    <script type="text/javascript">
+        // Função para alterar o formato do formulário
+        function changeTableFormat() {
+            const format = document.getElementById('tableFormat').value;
+            const container = document.getElementById('formContainer');
+            
+            let contentHTML = '';
+            switch (format) {
+                case 'formato1':
+                    contentHTML = `
+                        <h2>Exclusão de Fornecedor</h2>
+                        Código: <br/>
+                        <input type='number' name='idFornecedor'><br/>
+                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato2':
+                    contentHTML = `
+                        <h2>Exclusão de Remédio</h2>
+                        Código: <br/>
+                        <input type='number' name='idMedicamento'><br/>
+                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato3':
+                    contentHTML = `
+                        <h2>Exclusão de Funcionário</h2>
+                        Código: <br/>
+                        <input type='number' name='idFuncionario'><br/>
+                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+                case 'formato4':
+                    contentHTML = `
+                        <h2>Exclusão de Estoque</h2>
+                        Código: <br/>
+                        <input type='number' name='idEstoque'><br>
+                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" value="Limpar">
+                    `;
+                    break;
+            }
+            container.innerHTML = contentHTML;
+        }
+
+        // Função para excluir os dados do BD (xampp-MySQL)
+        function excluir(event) {
+            const format = document.getElementById('tableFormat').value;
+            event.preventDefault();
+            let codigo, URL;
+
+            switch (format) {
+                case 'formato1':
+                    codigo = parseInt(document.Exclusao.idFornecedor.value);
+                    URL = 'http://localhost/StayGood/apiFornecedor/Fornecedor/' + codigo;
+                    break;
+                case 'formato2':
+                    codigo = parseInt(document.Exclusao.idMedicamento.value);
+                    URL = 'http://localhost/StayGood/apiMedicamento/Remedios/' + codigo;
+                    break;
+                case 'formato3':
+                    codigo = parseInt(document.Exclusao.idFuncionario.value);
+                    URL = 'http://localhost/StayGood/apiFuncionario/Funcionario/' + codigo;
+                    break;
+                case 'formato4':
+                    codigo = parseInt(document.Exclusao.idEstoque.value);
+                    URL = 'http://localhost/StayGood/apiEstoque/Estoque/' + codigo;
+                    break;               
+            }
+
+            // Confirmar a exclusão dos dados
+            if (confirm("Tem certeza que deseja excluir este registro?")) {
+                fetch(URL, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status == "error") {
+                        alert("Sem dados no sistema!");
+                    } else {
+                        alert("Excluido com sucesso!");
+                    }
+                })
+            }
+        }
+
+        // Chama a função para exibir o formato padrão quando a página é carregada
+        window.onload = changeTableFormat;
+    </script>
+</body>
+</html>

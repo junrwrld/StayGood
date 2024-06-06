@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">    
+    <title>ConsultaAll</title>
+    <!-- Estilo para cada celula (td) da tabela -->
+</head>
+<body>
+    <form name="Consultar">
+        <p>Consultando dados:</p><br/><br/>
+        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+            <option value="formato1">Fornecedor</option>
+            <option value="formato2">Remédio</option>
+            <option value="formato3">Funcionário</option>
+            <option value="formato4">Estoque</option>
+        </select>  
+        <br/><br/>
+        <div id="tableContainer"></div>
+    </form>
+
+    <script type="text/javascript">
+        function changeTableFormat() {
+            const format = document.getElementById('tableFormat').value;
+            const container = document.getElementById('tableContainer');
+            container.innerHTML = '';
+
+            let URL = '';
+
+            switch (format) {
+                case 'formato1':
+                    URL = 'http://localhost/StayGood/apiFornecedor/Fornecedor/';
+                    fetchData(URL, criarTabelaFornecedor);
+                    break;
+                case 'formato2':
+                    URL = 'http://localhost/StayGood/apiMedicamento/Remedios/';
+                    fetchData(URL, criarTabelaMedicamento);
+                    break;
+                case 'formato3':
+                    URL = 'http://localhost/StayGood/apiFuncionario/Funcionario/';
+                    fetchData(URL, criarTabelaFuncionario);
+                    break;
+                case 'formato4':
+                    URL = 'http://localhost/StayGood/apiEstoque/Estoque/';
+                    fetchData(URL, criarTabelaEstoque);
+                    break;
+            }
+        }
+
+        function fetchData(URL, callback) {
+            fetch(URL, {method: 'GET'})
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.status === "error") {
+                        alert("Sem registros!");
+                    } else {
+                        callback(data.information);
+                    }
+                })
+                .catch(erro => console.log(erro));
+        }
+
+        function criarTabelaFornecedor(conteudo) {
+            var tabela = document.createElement("table");
+            var cabecalho = document.createElement("thead");
+            var corpo = document.createElement("tbody");
+
+            var tr = document.createElement("tr");
+            var thID = document.createElement("th");
+            var thCNPJ = document.createElement("th");
+            var thNome = document.createElement("th");
+
+            thID.appendChild(document.createTextNode("CÓDIGO"));
+            tr.appendChild(thID);
+            thCNPJ.appendChild(document.createTextNode("CNPJ"));
+            tr.appendChild(thCNPJ);
+            thNome.appendChild(document.createTextNode("FORNECEDOR"));
+            tr.appendChild(thNome);
+
+            cabecalho.appendChild(tr);
+            tabela.appendChild(cabecalho);
+
+            conteudo.forEach(item => {
+                var tr = document.createElement("tr");
+                var tdID = document.createElement("td");
+                var tdCNPJ = document.createElement("td");
+                var tdNome = document.createElement("td");
+
+                tdID.appendChild(document.createTextNode(item.idFornecedor));
+                tr.appendChild(tdID);
+                tdCNPJ.appendChild(document.createTextNode(item.CNPJ));
+                tr.appendChild(tdCNPJ);
+                tdNome.appendChild(document.createTextNode(item.nomeFornecedor));
+                tr.appendChild(tdNome);
+
+                corpo.appendChild(tr);
+            });
+
+            tabela.appendChild(corpo);
+            document.getElementById("tableContainer").appendChild(tabela);
+        }
+
+        function criarTabelaMedicamento(conteudo) {
+            var tabela = document.createElement("table");
+            var cabecalho = document.createElement("thead");
+            var corpo = document.createElement("tbody");
+
+            var tr = document.createElement("tr");
+            var thID = document.createElement("th");
+            var thNome = document.createElement("th");
+            var thCID = document.createElement("th");
+            var thValidade = document.createElement("th");
+
+            thID.appendChild(document.createTextNode("CÓDIGO"));
+            tr.appendChild(thID);
+            thNome.appendChild(document.createTextNode("MEDICAMENTO"));
+            tr.appendChild(thNome);
+            thCID.appendChild(document.createTextNode("CID"));
+            tr.appendChild(thCID);
+            thValidade.appendChild(document.createTextNode("VALIDADE"));
+            tr.appendChild(thValidade);
+
+            cabecalho.appendChild(tr);
+            tabela.appendChild(cabecalho);
+
+            conteudo.forEach(item => {
+                var tr = document.createElement("tr");
+                var tdID = document.createElement("td");
+                var tdNome = document.createElement("td");
+                var tdCID = document.createElement("td");
+                var tdValidade = document.createElement("td");
+
+                tdID.appendChild(document.createTextNode(item.idMedicamento));
+                tr.appendChild(tdID);
+                tdNome.appendChild(document.createTextNode(item.nomeMedicamento));
+                tr.appendChild(tdNome);
+                tdCID.appendChild(document.createTextNode(item.CID));
+                tr.appendChild(tdCID);
+                tdValidade.appendChild(document.createTextNode(item.validade));
+                tr.appendChild(tdValidade);
+
+                corpo.appendChild(tr);
+            });
+
+            tabela.appendChild(corpo);
+            document.getElementById("tableContainer").appendChild(tabela);
+        }
+
+        function criarTabelaFuncionario(conteudo) {
+            var tabela = document.createElement("table");
+            var cabecalho = document.createElement("thead");
+            var corpo = document.createElement("tbody");
+
+            var tr = document.createElement("tr");
+            var thID = document.createElement("th");
+            var thNome = document.createElement("th");
+            var thCPF = document.createElement("th");
+            var thTurno = document.createElement("th");
+
+            thID.appendChild(document.createTextNode("CÓDIGO"));
+            tr.appendChild(thID);
+            thNome.appendChild(document.createTextNode("NOME"));
+            tr.appendChild(thNome);
+            thCPF.appendChild(document.createTextNode("CPF"));
+            tr.appendChild(thCPF);
+            thTurno.appendChild(document.createTextNode("TURNO"));
+            tr.appendChild(thTurno);
+
+            cabecalho.appendChild(tr);
+            tabela.appendChild(cabecalho);
+
+            conteudo.forEach(item => {
+                var tr = document.createElement("tr");
+                var tdID = document.createElement("td");
+                var tdNome = document.createElement("td");
+                var tdCPF = document.createElement("td");
+                var tdTurno = document.createElement("td");
+
+                tdID.appendChild(document.createTextNode(item.idFuncionario));
+                tr.appendChild(tdID);
+                tdNome.appendChild(document.createTextNode(item.nomeFuncionario));
+                tr.appendChild(tdNome);
+                tdCPF.appendChild(document.createTextNode(item.CPF));
+                tr.appendChild(tdCPF);
+                tdTurno.appendChild(document.createTextNode(item.turno));
+                tr.appendChild(tdTurno);
+
+                corpo.appendChild(tr);
+            });
+
+            tabela.appendChild(corpo);
+            document.getElementById("tableContainer").appendChild(tabela);
+        }
+
+        function criarTabelaEstoque(conteudo) {
+            var tabela = document.createElement("table");
+            var cabecalho = document.createElement("thead");
+            var corpo = document.createElement("tbody");
+
+            var tr = document.createElement("tr");
+            var thID = document.createElement("th");
+            var thQuantidade = document.createElement("th");
+
+            thID.appendChild(document.createTextNode("CÓDIGO"));
+            tr.appendChild(thID);
+            thQuantidade.appendChild(document.createTextNode("QUANTIDADE"));
+            tr.appendChild(thQuantidade);
+
+            cabecalho.appendChild(tr);
+            tabela.appendChild(cabecalho);
+
+            conteudo.forEach(item => {
+                var tr = document.createElement("tr");
+                var tdID = document.createElement("td");
+                var tdQuantidade = document.createElement("td");
+
+                tdID.appendChild(document.createTextNode(item.idEstoque));
+                tr.appendChild(tdID);
+                tdQuantidade.appendChild(document.createTextNode(item.quantidade));
+                tr.appendChild(tdQuantidade);
+
+                corpo.appendChild(tr);
+            });
+
+            tabela.appendChild(corpo);
+            document.getElementById("tableContainer").appendChild(tabela);
+        }
+
+        // Chama a função para exibir o formato padrão quando a página é carregada
+        window.onload = changeTableFormat;
+    </script>
+</body>
+</html>

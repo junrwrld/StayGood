@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">    
+    <title>Consulta e Alteração</title>
+</head>
+<body>
+    <form name="Consultar">
+        <p>Consultando ou Alterando dados através do código:</p><br/><br/> 
+        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+            <option value="formato1">Fornecedor</option>
+            <option value="formato2">Remédio</option>
+            <option value="formato3">Funcionário</option>
+            <option value="formato4">Estoque</option>
+        </select>  
+        <br/><br/>
+        <div id="tableContainer"></div>
+    </form>
+
+    <script type="text/javascript">
+        function changeTableFormat() {
+            const formato = document.getElementById('tableFormat').value;
+            const container = document.getElementById('tableContainer');
+            
+            let contentHTML = '';
+            switch (formato) {
+                case 'formato1':
+                    contentHTML = `
+                        <h2>Tabela Fornecedor</h2>
+                        Código: <br/>
+                        <input type='number' name='idFornecedor' id='idFornecedor'><br/>
+                        CNPJ: <br/>
+                        <input type='text' name='txtCNPJ' id='txtCNPJ' readonly><br/>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFornecedor' id='txtNomeFornecedor'><br/>
+                        <input type="button" value="Consultar" onclick="consultar(event, 'formato1')">
+                        <input type="button" value="Alterar" onclick="alterar(event, 'formato1')"><br/><br/>
+                    `;
+                    break;
+                case 'formato2':
+                    contentHTML = `
+                        <h2>Tabela Medicamento</h2>
+                        Código: <br/>
+                        <input type='number' name='idMedicamento' id='idMedicamento'><br/>
+                        Medicamento: <br/>
+                        <input type='text' name='txtNomeMedicamento' id='txtNomeMedicamento'><br/>
+                        CID: <br/>
+                        <input type='text' name='txtCID' id='txtCID'><br/>
+                        Validade: <br/>
+                        <input type='text' name='txtValidade' id='txtValidade'><br/>
+                        <input type="button" value="Consultar" onclick="consultar(event, 'formato2')">
+                        <input type="button" value="Alterar" onclick="alterar(event, 'formato2')"><br/><br/>
+                    `;
+                    break;
+                case 'formato3':
+                    contentHTML = `
+                        <h2>Tabela Funcionário</h2>
+                        Código: <br/>
+                        <input type='number' name='idFuncionario' id='idFuncionario'><br/>
+                        Nome: <br/>
+                        <input type='text' name='txtNomeFuncionario' id='txtNomeFuncionario'><br/>
+                        CPF: <br/>
+                        <input type='text' name='txtCPF' id='txtCPF'><br/>
+                        Turno: <br/>
+                        <input type='text' name='txtTurno' id='txtTurno'><br/>
+                        <input type="button" value="Consultar" onclick="consultar(event, 'formato3')">
+                        <input type="button" value="Alterar" onclick="alterar(event, 'formato3')"><br/><br/>
+                    `;
+                    break;
+                case 'formato4':
+                    contentHTML = `
+                        <h2>Tabela Estoque</h2>
+                        Código: <br/>
+                        <input type='number' name='idEstoque' id='idEstoque'><br>
+                        Quantidade: <br/>
+                        <input type='text' name='txtQuantidade' id='txtQuantidade'><br/>
+                        <input type="button" value="Consultar" onclick="consultar(event, 'formato4')">
+                        <input type="button" value="Alterar" onclick="alterar(event, 'formato4')"><br/><br/>
+                    `;
+                    break;
+            }
+            container.innerHTML = contentHTML;
+        }
+
+        function consultar(event, formato) {
+            event.preventDefault();
+            const codigo = document.getElementById(getCodigoElementId(formato)).value;
+            const URL = getUrl(formato);
+
+            if (codigo) {
+                fetch(URL, { method: 'GET' })
+                    .then(resp => resp.json())
+                    .then(data => mostrarDados(data, formato))
+                    .catch(erro => console.log(erro));
+            }
+
+            if (codigo) {
+                fetch(URL, {method: 'GET'})
+                    .then(resp => resp.json())
+                    .then(data => mostrarDados(data, formato))
+                    .catch(erro => console.log(erro));
+            }
+        }
+
+        function mostrarDados(data, formato) {
+            switch (formato) {
+                case 'formato1':
+                    document.getElementById('txtCNPJ').value = data.information.CNPJ;
+                    document.getElementById('txtNomeFornecedor').value = data.information.nomeFornecedor;
+                    break;
+                case 'formato2':
+                    document.getElementById('txtNomeMedicamento').value = data.information.nomeMedicamento;
+                    document.getElementById('txtCID').value = data.information.CID;
+                    document.getElementById('txtValidade').value = data.information.validade;
+                    break;
+                case 'formato3':
+                    document.getElementById('txtNomeFuncionario').value = data.information.nomeFuncionario;
+                    document.getElementById('txtCPF').value = data.information.CPF;
+                    document.getElementById('txtTurno').value = data.information.turno;
+                    break;
+                case 'formato4':
+                    document.getElementById('txtQuantidade').value = data.information.quantidade;
+                    break;
+            }
+        }
+
+        function alterar(event, formato) {
+            event.preventDefault();
+            const codigo = document.getElementById(getCodigoElementId(formato)).value;
+            const URL = getUrl(formato);
+            const dados = getDados(formato);
+
+            if (codigo) {
+                fetch(URL, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dados),
+                })
+                .then(resp => resp.json())
+                .then(data => {
+                    if (data.status === "success") {
+                        alert("Dados alterados com sucesso!");
+                    } else {
+                        alert("Erro ao alterar dados!");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert("Erro ao alterar dados!");
+                });
+            }
+        }
+
+        function getCodigoElementId(formato) {
+            switch (formato) {
+                case 'formato1':
+                    return 'idFornecedor';
+                case 'formato2':
+                    return 'idMedicamento';
+                case 'formato3':
+                    return 'idFuncionario';
+                case 'formato4':
+                    return 'idEstoque';
+            }
+        }
+
+        function getUrl(formato) {
+            let URL;
+            switch (formato) {
+                case 'formato1':
+                    URL = 'http://localhost/StayGood/apiFornecedor/Fornecedor/';
+                    break;
+                case 'formato2':
+                    URL = 'http://localhost/StayGood/apiMedicamento/Remedios/';
+                    break;
+                case 'formato3':
+                    URL = 'http://localhost/StayGood/apiFuncionario/Funcionario/';
+                    break;
+                case 'formato4':
+                    URL = 'http://localhost/StayGood/apiEstoque/Estoque/';
+                    break;
+                default:
+                     return ''
+            }
+        }
+
+        function getDados(formato) {
+            let dados = {};
+            switch (formato) {
+                case 'formato1':
+                    dados = {
+                        idFornecedor: parseInt(document.getElementById('idFornecedor').value),
+                        CNPJ: document.getElementById('txtCNPJ').value,
+                        nomeFornecedor: document.getElementById('txtNomeFornecedor').value
+                    };
+                    break;
+                case 'formato2':
+                    dados = {
+                        idMedicamento: parseInt(document.getElementById('idMedicamento').value),
+                        nomeMedicamento: document.getElementById('txtNomeMedicamento').value,
+                        CID: document.getElementById('txtCID').value,
+                        validade: document.getElementById('txtValidade').value
+                    };
+                    break;
+                case 'formato3':
+                    dados = {
+                        idFuncionario: parseInt(document.getElementById('idFuncionario').value),
+                        nomeFuncionario: document.getElementById('txtNomeFuncionario').value,
+                        CPF: document.getElementById('txtCPF').value,
+                        turno: document.getElementById('txtTurno').value
+                    };
+                    break;
+                case 'formato4':
+                    dados = {
+                        idEstoque: parseInt(document.getElementById('idEstoque').value),
+                        quantidade: parseInt(document.getElementById('txtQuantidade').value)
+                    };
+                    break;
+            }
+            return dados;
+        }
+
+        // Chama a função para exibir o formato padrão quando a página é carregada
+        window.onload = changeTableFormat;
+    </script>
+</body>
+</html>
