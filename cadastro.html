@@ -1,21 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">    
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="template.css">
     <title>Cadastro</title>
 </head>
 <body>
-    <form name="Cadastro">
-        <p>Cadastro de dados através do código:</p><br/><br/> 
-        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+
+    <center style="width: 100%; height: 100%; background-color: #1bb896;">
+        <table id="menu" style="width: 50%;">
+            <tr style="text-align: center; margin-right: 10px;">
+                <td><a href="consulta.html">CONSULTA</a></td>
+                <td><a href="cadastro.html">CADASTRO</a></td>
+                <td style="color: midnightblue; font-size: 50px;"><a href="index.html">StayGood</a></td>
+                <td><a href="excluir.html">EXCLUIR</a></td>
+                <td><a href="alterar.html">ALTERAR</a></td>
+            </tr>
+        </table>
+    </center>
+
+<br><br>
+
+<center>
+    <form name="Cadastro" id="formRequisicao">
+        <br/><br/>
+        <select name="FormatoTabela" id="tableFormat" class="selectCmb" onchange="changeTableFormat()">
             <option value="formato1">Fornecedor</option>
             <option value="formato2">Remédio</option>
             <option value="formato3">Funcionário</option>
             <option value="formato4">Estoque</option>
         </select>  
-        <br/><br/>
         <div id="formContainer"></div>
     </form>
+</center>
+
+    <footer id="rodape">
+        <br>
+        <a>Desenvolvido por: Emillay Souza, João Batista, Pedro Henrique </a>
+    </footer>
 
     <script type="text/javascript">
         // Função para alterar o formato do formulário
@@ -27,48 +49,48 @@
             switch (format) {
                 case 'formato1':
                     contentHTML = `
-                        <h2>Cadastro de Fornecedor</h2>
-                        Nome: <br/>
-                        <input type='text' name='txtNomeFornecedor'><br/>
-                        CNPJ: <br/>
-                        <input type='text' name='txtCNPJ'><br/>
-                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
-                        <input type="reset" value="Limpar">
+                        <h2>Cadastro de Fornecedor:</h2>
+                        <a style="margin-right: 90px;">Nome do Fornecedor:</a> <br/>
+                        <input type='text' style="width: 230px; padding: 3px;" id="formatInput" name='txtNomeFornecedor' placeholder="Digite o nome..."><br/>
+                        <a style="margin-right: 190px;">CNPJ:</a><br/>
+                        <input type='text' name='txtCNPJ' style="width: 230px; padding: 3px;" placeholder="Digite o CNPJ..."><br/><br>
+                        <input type="button" name="btCadastrar" id="buttonGreen" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato2':
                     contentHTML = `
-                        <h2>Cadastro de Remédio</h2>
-                        Medicamento: <br/>
-                        <input type='text' name='txtNomeMedicamento'><br/>
-                        CID: <br/>
-                        <input type='text' name='txtCID'><br/>
-                        Validade: <br/>
-                        <input type='text' name='txtValidade'><br/>
-                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
-                        <input type="reset" value="Limpar">
+                        <h2>Cadastro de Remédio:</h2>
+                        <a style="margin-right: 145px;">Medicamento:</a> <br/>
+                        <input type='text' style="width: 230px; padding: 3px;" placeholder="Digite o Medicamento..." name='txtNomeMedicamento'><br/>
+                        <a style="margin-right: 205px;" >CID:</a> <br/>
+                        <input type='text' style="width: 230px; padding: 3px;" placeholder="Digite o CID..." name='txtCID'><br/>
+                        <a style="margin-right: 180px;" >Validade:</a> <br/>
+                        <input type='text' style="width: 230px; padding: 3px;" placeholder="Digite a Validade..." name='txtValidade'><br/><br>
+                        <input type="button" id="buttonGreen" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato3':
                     contentHTML = `
-                        <h2>Cadastro de Funcionário</h2>
-                        Nome: <br/>
-                        <input type='text' name='txtNomeFuncionario'><br/>
-                        CPF: <br/>
-                        <input type='text' name='txtCPF'><br/>
-                        Turno: <br/>
-                        <input type='text' name='txtTurno'><br/>
-                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
-                        <input type="reset" value="Limpar">
+                        <h2>Cadastro de Funcionário:</h2>
+                        <a style="margin-right: 190px;">Nome:</a> <br/>
+                        <input type='text' name='txtNomeFuncionario' style="width: 230px; padding: 3px;" placeholder="Digite o Nome do Funcionário..."><br/>
+                        <a style="margin-right: 205px;">CPF:</a> <br/>
+                        <input type='text' name='txtCPF' style="width: 230px; padding: 3px;" placeholder="Digite o CPF..."><br/>
+                        <a style="margin-right: 195px;">Turno:</a> <br/>
+                        <input type='text' name='txtTurno' style="width: 230px; padding: 3px;" placeholder="Digite o Turno..." ><br/><br>
+                        <input type="button" id="buttonGreen" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato4':
                     contentHTML = `
-                        <h2>Cadastro de Estoque</h2>
-                        Quantidade: <br/>
-                        <input type='number' name='txtQuantidade'><br/>
-                        <input type="button" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
-                        <input type="reset" value="Limpar">
+                        <h2>Cadastro de Estoque:</h2>
+                        <a style="margin-right: 160px;">Quantidade:</a> <br/>
+                        <input type='number' name='txtQuantidade' style="width: 230px; padding: 3px;" placeholder="Digite a Quantidade..."><br/><br>
+                        <input type="button" id="buttonGreen" name="btCadastrar" value="Cadastrar" onclick="cadastrar(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
             }
