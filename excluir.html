@@ -19,10 +19,10 @@
         </table>
     </center>
 
-
+<center>
     <form name="Exclusao">
-        <p>Excluindo dados através do código:</p><br/><br/> 
-        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+        <br><br>
+        <select name="FormatoTabela" id="tableFormat" class="selectCmb" onchange="changeTableFormat()">
             <option value="formato1">Fornecedor</option>
             <option value="formato2">Remédio</option>
             <option value="formato3">Funcionário</option>
@@ -31,7 +31,7 @@
         <br/><br/>
         <div id="formContainer"></div>
     </form>
-
+</center>
     <footer id="rodape">
         <br>
         <a>Desenvolvido por: Emillay Souza, João Batista, Pedro Henrique </a>
@@ -48,37 +48,37 @@
                 case 'formato1':
                     contentHTML = `
                         <h2>Exclusão de Fornecedor</h2>
-                        Código: <br/>
-                        <input type='number' name='idFornecedor'><br/>
-                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
-                        <input type="reset" value="Limpar">
+                        <a style="margin-right: 188px;">Código:</a> <br/>
+                        <input type='number' style="width: 230px; padding: 3px;" name='idFornecedor' placeholder="Digite o Código.." ><br/><br>
+                        <input type="button" id="buttonGreen" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato2':
                     contentHTML = `
                         <h2>Exclusão de Remédio</h2>
-                        Código: <br/>
-                        <input type='number' name='idMedicamento'><br/>
-                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
-                        <input type="reset" value="Limpar">
+                        <a style="margin-right: 188px;">Código:</a> <br/>
+                        <input type='number' style="width: 230px; padding: 3px;" name='idMedicamento' placeholder="Digite o Código.."><br/><br>
+                        <input type="button" id="buttonGreen" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato3':
                     contentHTML = `
                         <h2>Exclusão de Funcionário</h2>
-                        Código: <br/>
-                        <input type='number' name='idFuncionario'><br/>
-                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
-                        <input type="reset" value="Limpar">
+                        <a style="margin-right: 188px;">Código:</a> <br/>
+                        <input type='number' style="width: 230px; padding: 3px;" name='idFuncionario' placeholder="Digite o Código.."><br/><br>
+                        <input type="button" id="buttonGreen" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
                 case 'formato4':
                     contentHTML = `
                         <h2>Exclusão de Estoque</h2>
-                        Código: <br/>
-                        <input type='number' name='idEstoque'><br>
-                        <input type="button" name="btExcluir" value="Excluir" onclick="excluir(event)">
-                        <input type="reset" value="Limpar">
+                        <a style="margin-right: 188px;">Código:</a> <br/>
+                        <input type='number' style="width: 230px; padding: 3px;" name='idEstoque' placeholder="Digite o Código.."><br><br>
+                        <input type="button" id="buttonGreen" name="btExcluir" value="Excluir" onclick="excluir(event)">
+                        <input type="reset" id="buttonYellow" value="Limpar">
                     `;
                     break;
             }

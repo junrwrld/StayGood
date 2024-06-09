@@ -20,10 +20,10 @@
         </table>
     </center>
 
-
+<center>
     <form name="Consultar">
         <p>Consultando dados:</p><br/><br/>
-        <select name="FormatoTabela" id="tableFormat" onchange="changeTableFormat()">
+        <select name="FormatoTabela" id="tableFormat" class="selectCmb onchange="changeTableFormat()">
             <option value="formato1">Fornecedor</option>
             <option value="formato2">Remédio</option>
             <option value="formato3">Funcionário</option>
@@ -32,6 +32,11 @@
         <br/><br/>
         <div id="tableContainer"></div>
     </form>
+</center>
+    <footer id="rodape">
+        <br>
+        <a>Desenvolvido por: Emillay Souza, João Batista, Pedro Henrique </a>
+    </footer>
 
     <script type="text/javascript">
         function changeTableFormat() {
